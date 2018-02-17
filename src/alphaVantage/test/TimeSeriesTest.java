@@ -7,7 +7,7 @@ public class TimeSeriesTest {
 
 	public static void main(String[] args) {
 		String stockName = "RELIANCE";
-		
+		   
 		XLSDatabase db = new XLSDatabase(stockName, "Day");
 		db.updateDatabase();
 		TimeSeries timeSeries;
