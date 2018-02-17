@@ -1,0 +1,29 @@
+.chart-plot-background {
+-fx-background-color: transparent;
+}
+
+.default-color0.chart-series-line {
+-fx-stroke: white
+}
+
+.default-color0.chart-line-symbol { 
+-fx-background-color: blue, white;
+}
+
+.default-color0.chart-bar { 
+	
+	-fx-bar-fill:rgb(25,225,25,1.00);
+	-fx-border-width: 1, 1,1,1;
+    -fx-font-weight: bold;
+    -fx-font-size: 20;
+    -fx-border-color: #e2e2e2;}
+
+.chart {
+  -fx-background-color: #657F92;  
+}
+.fx-background-color {
+  -fx-background-color: red;
+}
+.chart-plot-background {
+    -fx-background-color: rgb(0,0,0,0.25);
+}
