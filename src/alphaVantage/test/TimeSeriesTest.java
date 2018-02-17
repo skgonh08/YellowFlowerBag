@@ -8,7 +8,7 @@ public class TimeSeriesTest {
 	public static void main(String[] args) {
 		String stockName = "RELIANCE";
 		   
-		//tsting 123
+		
 		   XLSDatabase db = new XLSDatabase(stockName, "Day");
 		db.updateDatabase();
 		TimeSeries timeSeries;
