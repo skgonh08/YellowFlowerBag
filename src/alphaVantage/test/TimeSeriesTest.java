@@ -6,7 +6,7 @@ import ta4j.TimeSeries;
 public class TimeSeriesTest {
 
 	public static void main(String[] args) {
-		String stockName = "RELIANCE";
+		String stockName = "TCS";
 		   
 		
 		   XLSDatabase db = new XLSDatabase(stockName, "Day");

@@ -3,6 +3,7 @@ package ta4jexamplesBS;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import alphaVantage.excelWrite.XLSDatabase;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
@@ -53,11 +54,26 @@ public class SBITest1yr  extends Application  {
 	final static String fileName = "13-08-2015-TO-11-08-2017ICICIBANKEQN.csv";
 	
 
-	
-	private static TimeSeries series = CsvTicksLoader.loadDataFromCSV(fileName);
+	//private static TimeSeries series = CsvTicksLoader.loadDataFromCSV(fileName);
+	static TimeSeries series = null;
 
 	public static void main(String[] args) {
 
+		String stockName = "TCS";
+		   
+		
+		   XLSDatabase db = new XLSDatabase(stockName, "Day");
+		db.updateDatabase();
+		
+		try {
+			series = db.loadTick();
+			System.out.println("row count:"+series.getTickCount());
+			System.out.println("Last Update Date: "+series.getTick(series.getTickCount()-1).getDateName());
+		} catch (Exception e) {
+			
+			//e.printStackTrace();
+		}
+		
 		
 		// Get Close price indicator
 		ClosePriceIndicator closePrice = new ClosePriceIndicator(series);
