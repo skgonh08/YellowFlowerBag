@@ -3,6 +3,7 @@ package ta4jexamplesBS;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import alphaVantage.InputDataType;
 import alphaVantage.excelWrite.XLSDatabase;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -27,6 +28,7 @@ import ta4j.analysis.criteria.TotalGrossProfit;
 import ta4j.analysis.criteria.TotalProfitCriterion;
 import ta4j.analysis.criteria.VersusBuyAndHoldCriterion;
 import ta4j.candleSticks.CandleStickChart;
+import ta4j.candleSticks.CandleStickGraph;
 import ta4j.candleSticks.DecimalAxisFormatter;
 import ta4j.indicators.candles.*;
 import ta4j.indicators.simple.*;
@@ -40,99 +42,83 @@ import ta4j.trading.rules.StopGainRule;
 import ta4j.trading.rules.StopLossRule;
 import ta4jexamplesBS.loaders.CsvTicksLoader;
 
-public class SBITest1yr  extends Application  {
+public class SBITest1yr extends Application {
 
-	
-	// Instance variable //
-	
-	private final int candleStickgrphHeight = 480;
-	private final int volumeGrphHeight = 170;
-	private final int graphWidthForOneFullScreen = 650;
-	private final int totalBarDisplyedOnScreen = 60;
-	private int chartWidth = 0;
-	private int inputDataCount = 0;
-	final static String fileName = "13-08-2015-TO-11-08-2017ICICIBANKEQN.csv";
-	
+	private static String stockName = "TCS";
 
-	//private static TimeSeries series = CsvTicksLoader.loadDataFromCSV(fileName);
-	static TimeSeries series = null;
+	private static TimeSeries series = null;
 
 	public static void main(String[] args) {
 
-		String stockName = "TCS";
-		   
-		
-		   XLSDatabase db = new XLSDatabase(stockName, "Day");
-		db.updateDatabase();
-		
+		XLSDatabase db = new XLSDatabase(stockName, "Day");
+		// db.updateDatabase();
+
 		try {
-			series = db.loadTick();
-			System.out.println("row count:"+series.getTickCount());
-			System.out.println("Last Update Date: "+series.getTick(series.getTickCount()-1).getDateName());
+			series = db.loadTicks(1, InputDataType.YEAR);
+			System.out.println("row count:" + series.getTickCount());
+			System.out.println("Last Update Date: " + series.getTick(series.getTickCount() - 1).getDateName());
 		} catch (Exception e) {
-			
-			//e.printStackTrace();
+
+			e.printStackTrace();
 		}
-		
-		
+
 		// Get Close price indicator
 		ClosePriceIndicator closePrice = new ClosePriceIndicator(series);
 
-		// Getting the exponential moving average (EMA) of the close price over the
+		// Getting the exponential moving average (EMA) of the close price over
+		// the
 		// last 5 ticks
 		EMAIndicator shortEma = new EMAIndicator(closePrice, 5);
-		
+
 		// Getting a longer EMA (e.g. over the 30 last ticks)
 		EMAIndicator longEma = new EMAIndicator(closePrice, 11);
-		
+
 		BullishHaramiIndicator BuHarami = new BullishHaramiIndicator(series, 6, 20, 0.60, 0.30);
-		BullishEngulfingIndicator BulEngulf = new BullishEngulfingIndicator(series, 20,20, 0.50);
-		BullishPiercingIndicator BullPier = new BullishPiercingIndicator(series, 20,20,0.50);
-		BullishPaperUmbrellaIndicator BullPaper = new BullishPaperUmbrellaIndicator(series, 5,5, 0.25);
+		BullishEngulfingIndicator BulEngulf = new BullishEngulfingIndicator(series, 20, 20, 0.50);
+		BullishPiercingIndicator BullPier = new BullishPiercingIndicator(series, 20, 20, 0.50);
+		BullishPaperUmbrellaIndicator BullPaper = new BullishPaperUmbrellaIndicator(series, 5, 5, 0.25);
 		ThreeWhiteSoldiersIndicator threeWhiteSo = new ThreeWhiteSoldiersIndicator(series, 5, Decimal.ONE);
-		BullishTheMorningStar morningStar = new BullishTheMorningStar(series,6,6, 0.50, 0.25);
-		
-		
+		BullishTheMorningStar morningStar = new BullishTheMorningStar(series, 6, 6, 0.50, 0.25);
+
 		BearishEngulfingIndicator BearEngulf = new BearishEngulfingIndicator(series);
 		BearishHaramiIndicator BearHarami = new BearishHaramiIndicator(series);
 		BearishDarkCloudCoverIndicator BeDarkClCo = new BearishDarkCloudCoverIndicator(series);
 		ThreeBlackCrowsIndicator threeBlackCr = new ThreeBlackCrowsIndicator(series, 5, Decimal.ONE);
-		
+
 		UpTrendIndicator uptrend = new UpTrendIndicator(series, 20);
 		DownTrendIndicator downtrend = new DownTrendIndicator(series, 20);
-		
-		
-		
+
 		VolumeIndicator volumeIndicator = new VolumeIndicator(series);
 		SMAIndicator volumeSMA = new SMAIndicator(volumeIndicator, 10);
-		
+
 		AmountIndicator amountIndicator = new AmountIndicator(series);
 		System.out.println("Amount at index 2 is : " + amountIndicator.getValue(2));
-		
+
 		// Buying rules
-		
-		Rule buyingRule =(/*new CrossedUpIndicatorRule(shortEma, longEma))
-				.or(new CrossedDownIndicatorRule(closePrice, Decimal.valueOf("900")))
-				.or(new BooleanIndicatorRule(threeWhiteSo))
-				.or(*/new BooleanIndicatorRule(BuHarami))
-				.or(new BooleanIndicatorRule(BulEngulf))/*
-				.or(new BooleanIndicatorRule(BullPier))*/
-				.or(new BooleanIndicatorRule(BullPaper))
-				.or(new BooleanIndicatorRule(morningStar));
-				//.and(new OverIndicatorRule(volumeIndicator, volumeSMA)));
-				
+
+		Rule buyingRule = (/*
+							 * new CrossedUpIndicatorRule(shortEma, longEma))
+							 * .or(new CrossedDownIndicatorRule(closePrice,
+							 * Decimal.valueOf("900"))) .or(new
+							 * BooleanIndicatorRule(threeWhiteSo)) .or(
+							 */new BooleanIndicatorRule(BuHarami))
+				.or(new BooleanIndicatorRule(
+						BulEngulf))/*
+									 * .or(new BooleanIndicatorRule(BullPier))
+									 */
+				.or(new BooleanIndicatorRule(BullPaper)).or(new BooleanIndicatorRule(morningStar));
+		// .and(new OverIndicatorRule(volumeIndicator, volumeSMA)));
+
 		// Selling rules
-		
-		Rule sellingRule =  new CrossedDownIndicatorRule(shortEma, longEma)
+
+		Rule sellingRule = new CrossedDownIndicatorRule(shortEma, longEma)
 				.or(new StopLossRule(closePrice, Decimal.valueOf("1")))
-				//.or(new StopGainRule(closePrice, Decimal.valueOf("3")))
+				// .or(new StopGainRule(closePrice, Decimal.valueOf("3")))
 				.or(new BooleanIndicatorRule(threeBlackCr))
 				.or((new BooleanIndicatorRule(BearEngulf)).and(new BooleanIndicatorRule(uptrend)))
 				.or((new BooleanIndicatorRule(BearHarami)).and(new BooleanIndicatorRule(uptrend)))
 				.or((new BooleanIndicatorRule(BeDarkClCo)).and(new BooleanIndicatorRule(uptrend)));
-				//.and(new OverIndicatorRule(volumeIndicator, volumeSMA)));
-
-				
+		// .and(new OverIndicatorRule(volumeIndicator, volumeSMA)));
 
 		// Running our juicy trading strategy...
 		TradingRecord tradingRecord = series.run(new Strategy(buyingRule, sellingRule));
@@ -171,79 +157,15 @@ public class SBITest1yr  extends Application  {
 		// vs total profit of a buy-and-hold strategy
 		AnalysisCriterion vsBuyAndHold = new VersusBuyAndHoldCriterion(new TotalProfitCriterion());
 		System.out.println("Our profit vs buy-and-hold profit: " + vsBuyAndHold.calculate(series, tradingRecord));
-		
-		
+
+		// CandleStickGraph graph = new CandleStickGraph();
+		System.out.println(series.getTickCount());
+		// graph.setTimeSeries(series);
+		// graph.createGraph(args);
+
 		// launching graph
 		launch(args);
 	}
-	
-	
-/*========================================*/	
-/*Below methods are written for JAVA FX   */	
-/*========================================*/	
-	
-	
-	@Override
-	public void start(Stage stage) throws Exception {
-		long strtTime = System.currentTimeMillis();
-		//TimeSeries series = CsvTicksLoader.loadDataFromCSV(fileName);
-			
-		CandleStickChart candleStickChart = new CandleStickChart(fileName, series);
-		ScrollPane scrollPane = new ScrollPane();
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
-		final CategoryAxis xAxisVolBar = new CategoryAxis();
-		final NumberAxis yAxisVolBar = new NumberAxis();
-		yAxisVolBar.setTickLabelFormatter(new DecimalAxisFormatter("###0.##E0"));
-		final BarChart<String, Number> volumeBarChart = new BarChart<>(xAxisVolBar, yAxisVolBar);
-		XYChart.Series<String, Number> volBarSeriesData = new XYChart.Series<String, Number>();
-
-		inputDataCount = series.getTickCount();
-		chartWidth = (inputDataCount / totalBarDisplyedOnScreen == 0 ? 1 : inputDataCount / totalBarDisplyedOnScreen)
-				* graphWidthForOneFullScreen;
-		System.out.println("Chart Width: " + chartWidth);
-		System.out.println("Input Data Count: " + inputDataCount);
-
-		
-		for(int i =0; i<inputDataCount;i++){
-			String label = sdf.format(series.getTick(i).getEndTime().toDate());
-			volBarSeriesData.getData().add(new XYChart.Data<String, Number>(label, series.getTick(i).getVolume().toDouble()));
-		}
-		
-		
-		volumeBarChart.getData().add(volBarSeriesData);
-		volumeBarChart.setLegendVisible(false);
-		volumeBarChart.setAnimated(false);
-		volumeBarChart.setAlternativeRowFillVisible(false);
-		volumeBarChart.setAlternativeColumnFillVisible(false);
-		// bc.setHorizontalGridLinesVisible(false);
-		volumeBarChart.setVerticalGridLinesVisible(false);
-		volumeBarChart.getStylesheets().add(getClass().getResource("resources/VolBarGraphStyle.css").toExternalForm());
-		
-
-		candleStickChart.getXAxis().setTickLabelsVisible(false);
-		candleStickChart.getXAxis().setOpacity(0);
-		FlowPane fPane = new FlowPane();
-		// fPane.setVgap(5);
-		candleStickChart.setPrefSize(chartWidth, candleStickgrphHeight);
-		volumeBarChart.setPrefSize(chartWidth, volumeGrphHeight);
-		fPane.getChildren().add(candleStickChart);
-		fPane.getChildren().add(volumeBarChart);
-
-		scrollPane.setContent(fPane);
-
-		Scene scene = new Scene(scrollPane);
-		scene.getStylesheets().add(getClass().getResource("resources/CandleStickChartStyles.css").toExternalForm());
-
-		stage.setTitle("SBIN EQ last 2 Years");
-		stage.setScene(scene);
-		stage.show();
-
-		candleStickChart.setYAxisFormatter(new DecimalAxisFormatter("#000.00"));
-		long endTime = System.currentTimeMillis();
-		System.out.println("Time: " + (endTime - strtTime) / 100);
-	}
-
 
 	protected double getNewValue(double previousValue) {
 		int sign;
@@ -260,6 +182,19 @@ public class SBITest1yr  extends Application  {
 		double newValue = 0;
 		newValue = Math.random() * 10;
 		return newValue;
+	}
+
+	/* ======================================== */
+	/* Below methods are written for JAVA FX */
+	/* ======================================== */
+	@Override
+	public void start(Stage stage) throws Exception {
+		CandleStickGraph candleStickGraph = new CandleStickGraph(series, stockName);
+		Scene scene = candleStickGraph.getScene();
+		stage.setTitle(stockName);
+		stage.setScene(scene);
+		stage.show();
+
 	}
 
 }

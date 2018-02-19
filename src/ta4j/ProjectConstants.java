@@ -10,5 +10,13 @@ public class ProjectConstants {
 	public static final String AlphaVnatageAPIKey = "H6CYZI3ZP6X4NURT";
 	
 	public static final int APICallTimeOut = 100000;
+		
+	public static final int candleStickgrphHeight = 480;
+	
+	public static final int volumeGrphHeight = 170;
+	
+	public static final int graphWidthForOneFullScreen = 650;
+	
+	public static final int totalBarDisplyedOnScreen = 60;
 
 }
