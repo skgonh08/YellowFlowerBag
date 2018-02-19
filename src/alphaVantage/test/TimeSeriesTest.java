@@ -1,5 +1,6 @@
 package alphaVantage.test;
 
+import alphaVantage.InputDataType;
 import alphaVantage.excelWrite.XLSDatabase;
 import ta4j.TimeSeries;
 
@@ -13,7 +14,7 @@ public class TimeSeriesTest {
 		db.updateDatabase();
 		TimeSeries timeSeries;
 		try {
-			timeSeries = db.loadTick();
+			timeSeries = db.loadTicks(1, InputDataType.YEAR);
 			System.out.println("row count:"+timeSeries.getTickCount());
 			System.out.println("Last Update Date: "+timeSeries.getTick(timeSeries.getTickCount()-1).getDateName());
 		} catch (Exception e) {

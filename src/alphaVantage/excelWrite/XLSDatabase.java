@@ -26,6 +26,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.joda.time.DateTime;
 
 import alphaVantage.AlphaVantageConnector;
+import alphaVantage.InputDataType;
 import alphaVantage.TimeSeriesInput;
 import alphaVantage.input.timeseries.OutputSize;
 import alphaVantage.output.timeseries.Daily;
@@ -104,8 +105,8 @@ public class XLSDatabase {
 		int lastRowNum = sheet.getLastRowNum();
 
 		if (lastRowNum == 0) {
-		    
-			if (ProjectConstants.headerInExcelFiles){
+
+			if (ProjectConstants.headerInExcelFiles) {
 				dateDifferenceCalcReq = 'N';
 				rowNumber = 1;
 				// Setting header...
@@ -117,12 +118,11 @@ public class XLSDatabase {
 				rowFirst.createCell(3).setCellValue("Low");
 				rowFirst.createCell(4).setCellValue("Close");
 				rowFirst.createCell(5).setCellValue("Volume");
-			}
-			else {
+			} else {
 				dateDifferenceCalcReq = 'N';
 				rowNumber = 0;
 			}
-			
+
 		} else {
 			dateDifferenceCalcReq = 'Y';
 			rowNumber = lastRowNum + 1;
@@ -194,11 +194,12 @@ public class XLSDatabase {
 	}
 
 	public void updateDatabase() {
-		String methodName =  "updateDatabase()~";
+		String methodName = "updateDatabase()~";
 		OutputSize outputSize = null;
 		String apiCallRequired = "Yes";
-		
-		AlphaVantageConnector apiConnector = new AlphaVantageConnector(ProjectConstants.AlphaVnatageAPIKey, ProjectConstants.APICallTimeOut);
+
+		AlphaVantageConnector apiConnector = new AlphaVantageConnector(ProjectConstants.AlphaVnatageAPIKey,
+				ProjectConstants.APICallTimeOut);
 
 		try {
 			isFileExistOrMakeIt();
@@ -241,47 +242,61 @@ public class XLSDatabase {
 			 */
 
 			List<StockData> stockData = resp.getStockData();
-			Collections.reverse(stockData);
+			// Collections.reverse(stockData);
 
 			// Writing to DB...
 			try {
 				updateFile(stockData);
-				System.out.println(methodName+"Database successfully updated (Stock: " + stockName + " )");
+				System.out.println(methodName + "Database successfully updated (Stock: " + stockName + " )");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		} else {
-			System.out.println(methodName+"Database already updated with latest data. No API call required.");
+			System.out.println(methodName + "Database already updated with latest data. No API call required.");
 		}
 	}
 
-	public TimeSeries loadTick() throws Exception {
-		String methodName =  "loadTick()~";
+	public TimeSeries loadTicks(int numOfdata, InputDataType dataType) throws Exception {
+		String methodName = "loadTick()~";
 		HSSFRow row;
 		FileInputStream is;
 		HSSFWorkbook workbook = null;
+		int numOfTicks = 0;
+		int tickCount = 0;
+		//Checking data type
+		if (dataType==InputDataType.DAY){
+			numOfTicks = numOfdata;
+		}
+		else if (dataType==InputDataType.MONTH){
+			numOfTicks = numOfdata*22;
+		}
+		else if (dataType==InputDataType.YEAR){
+			numOfTicks = numOfdata*260;
+		}
+		
+		
 		try {
 			is = new FileInputStream(fileName);
 			workbook = new HSSFWorkbook(is);
 			HSSFSheet sheet = workbook.getSheet(timeInterval);
-			
+
 			int lastRowNum = sheet.getLastRowNum();
-			
-			if (lastRowNum ==0){
-				System.out.println(methodName+"File contains not data ~ Please execute updateDatabase method first ");
+
+			if (lastRowNum == 0) {
+				System.out.println(methodName + "File contains not data ~ Please execute updateDatabase method first ");
 				throw new Exception();
 			}
 
 			List<Tick> ticks = new ArrayList<Tick>();
 			Iterator<Row> rows = sheet.rowIterator();
-			
+
 			if (ProjectConstants.headerInExcelFiles) {
 				row = (HSSFRow) rows.next();
 			}
-				
+
 			while (rows.hasNext()) {
 				row = (HSSFRow) rows.next();
-				
+
 				DateTime date = new DateTime(dateFormat.parse(row.getCell(0).getStringCellValue()));
 				double open = row.getCell(1).getNumericCellValue();
 				double high = row.getCell(2).getNumericCellValue();
@@ -290,8 +305,16 @@ public class XLSDatabase {
 				double volume = row.getCell(5).getNumericCellValue();
 
 				ticks.add(new Tick(date, open, high, low, close, volume));
-				
+				tickCount++;
+
+				if (tickCount == numOfTicks) {
+					break;
+				}
+
 			}
+			// Reversing ticks
+			Collections.reverse(ticks);
+
 			return new TimeSeries(fileName, ticks);
 
 		} catch (FileNotFoundException e) {
@@ -301,7 +324,7 @@ public class XLSDatabase {
 		} catch (ParseException e) {
 			System.out.println(methodName + "Date format mismatch");
 			e.printStackTrace();
-		}  finally {
+		} finally {
 			try {
 				workbook.close();
 			} catch (IOException e) {
