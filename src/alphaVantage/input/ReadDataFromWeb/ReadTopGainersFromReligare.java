@@ -1,7 +1,10 @@
 package alphaVantage.input.ReadDataFromWeb;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -11,9 +14,11 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import alphaVantage.excelWrite.NewsXLSDataBase;
+import ta4j.ProjectConstants;
 
 public class ReadTopGainersFromReligare {
-
+  
+	DateFormat dateFormat = new SimpleDateFormat(ProjectConstants.dateFormat);
 	public List<String> read() {
 
 		List<String> stocks = new ArrayList<String>();
@@ -51,8 +56,12 @@ public class ReadTopGainersFromReligare {
 		}
 		// Writing Data to output Excel File
 		
+		// get Current Date
+		Date date = new Date();
+		System.out.println(dateFormat.format(date)); 
+		
 		NewsXLSDataBase xlsDatabase = new NewsXLSDataBase("NewsFromWeb", "Religare");
-		xlsDatabase.updateDatabase(stocksSymbol, "22-FEB-18");
+		xlsDatabase.updateDatabase(stocksSymbol, dateFormat.format(date));
 
 	}
 }
