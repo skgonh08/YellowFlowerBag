@@ -17,7 +17,7 @@ public class ProjectConstants {
 	
 	public static final int volumeGrphHeight = 170;
 	
-	public static final int graphWidthForOneFullScreen = 650;
+	public static final int graphWidthForOneFullScreen = 651;
 	
 	public static final int totalBarDisplyedOnScreen = 60;
 	
