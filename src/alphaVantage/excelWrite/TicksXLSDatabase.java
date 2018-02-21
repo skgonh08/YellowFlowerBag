@@ -46,7 +46,7 @@ public class TicksXLSDatabase implements XLSDatabase {
 	private String fileExtension = ".xls";
 	private DateTimeFormatter dtformatter = DateTimeFormatter.ofPattern(ProjectConstants.dateFormat);
 	private HSSFWorkbook wb;
-	private static DateFormat dateFormat = new SimpleDateFormat(ProjectConstants.dateFormat);
+	private DateFormat dateFormat = new SimpleDateFormat(ProjectConstants.dateFormat);
 	private HSSFWorkbook wb2;
 
 	// Constructors
@@ -147,7 +147,7 @@ public class TicksXLSDatabase implements XLSDatabase {
 
 	}
 
-	public static long getDateDiff(String  date1, String date2) {
+	public long getDateDiff(String  date1, String date2) {
 
 		long diffDays = 0;
 		try {
