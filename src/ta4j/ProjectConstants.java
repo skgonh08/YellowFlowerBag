@@ -18,11 +18,12 @@ public class ProjectConstants {
 	public static final int volumeGrphHeight = 170;
 	
 
-	public static final int graphWidthForOneFullScreen = 658; 
+	public static final int graphWidthForOneFullScreen = 659; 
 
 	
 	public static final int totalBarDisplyedOnScreen = 60;
 	
 	public static final String NSEAllCompanyInfoSourceURL = "https://www.nseindia.com/content/equities/EQUITY_L.csv";
 
+	public static final String bhola = "66"; // created by bhola
 }
