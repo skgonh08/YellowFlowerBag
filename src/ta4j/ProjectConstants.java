@@ -24,5 +24,7 @@ public class ProjectConstants {
 	public static final int totalBarDisplyedOnScreen = 60;
 	
 	public static final String NSEAllCompanyInfoSourceURL = "https://www.nseindia.com/content/equities/EQUITY_L.csv";
+	
+	public static final int newTest = 0;
 
 }
