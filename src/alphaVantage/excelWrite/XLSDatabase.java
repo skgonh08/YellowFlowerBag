@@ -20,7 +20,7 @@ public interface XLSDatabase {
 		HSSFSheet sheet;
 		if (Files.exists(path)) {
 			FileInputStream is = new FileInputStream(fileName);
-			workbook = new HSSFWorkbook(is);
+			workbook = new HSSFWorkbook(is );
 			sheet = workbook.getSheet(sheetName);
 
 			if (sheet == null) {
