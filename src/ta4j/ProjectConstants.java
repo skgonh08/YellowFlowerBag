@@ -17,11 +17,9 @@ public class ProjectConstants {
 	
 	public static final int volumeGrphHeight = 170;
 	
-<<<<<<< HEAD
+
 	public static final int graphWidthForOneFullScreen = 654;
-=======
-	public static final int graphWidthForOneFullScreen = 657;
->>>>>>> branch 'master' of https://github.com/skgonh08/YellowFlowerBag.git
+
 	
 	public static final int totalBarDisplyedOnScreen = 60;
 	
