@@ -24,67 +24,92 @@ import ta4j.trading.rules.BooleanIndicatorRule;
 import ta4j.trading.rules.CrossedDownIndicatorRule;
 import ta4j.trading.rules.StopLossRule;
 
-public class BuyingSellingRuleFromIndicators implements BuyingSellingRule{
+public class BuyingSellingRuleFromIndicators implements BuyingSellingRule {
 
-private TimeSeries series;
-	
-public BuyingSellingRuleFromIndicators(TimeSeries series){
-	this.series = series;
-}
+	private TimeSeries series;
+	ClosePriceIndicator closePrice;
+	EMAIndicator shortEma;
+	EMAIndicator longEma;
+	BullishHaramiIndicator BuHarami;
+	BullishEngulfingIndicator BulEngulf;
+	BullishPiercingIndicator BullPier;
+	BullishPaperUmbrellaIndicator BullPaper;
+	ThreeWhiteSoldiersIndicator threeWhiteSo;
+	SMAIndicator volumeSMA;
+	BearishHaramiIndicator BearHarami;
+	BearishDarkCloudCoverIndicator BeDarkClCo;
+	BullishTheMorningStar morningStar;
+	UpTrendIndicator uptrend;
+	DownTrendIndicator downtrend;
+	AmountIndicator amountIndicator;
+	ThreeBlackCrowsIndicator threeBlackCr;
+	VolumeIndicator volumeIndicator;
+	BearishEngulfingIndicator BearEngulf;
 
-		//Get Close price indicator
-		ClosePriceIndicator closePrice = new ClosePriceIndicator(series);
+	public BuyingSellingRuleFromIndicators(TimeSeries series) {
+		this.series = series;
+		initialize();
+	}
 
-		// Getting the exponential moving average (EMA) of the close price over
-		// the
-		// last 5 ticks
-		EMAIndicator shortEma = new EMAIndicator(closePrice, 5);
+	private void initialize() {
+		closePrice = new ClosePriceIndicator(series);
 
-		// Getting a longer EMA (e.g. over the 30 last ticks)
-		EMAIndicator longEma = new EMAIndicator(closePrice, 11);
+		shortEma = new EMAIndicator(closePrice, 5);
 
-		BullishHaramiIndicator BuHarami = new BullishHaramiIndicator(series, 6, 20, 0.60, 0.30);
-		BullishEngulfingIndicator BulEngulf = new BullishEngulfingIndicator(series, 20, 20, 0.50);
-		BullishPiercingIndicator BullPier = new BullishPiercingIndicator(series, 20, 20, 0.50);
-		BullishPaperUmbrellaIndicator BullPaper = new BullishPaperUmbrellaIndicator(series, 5, 5, 0.25);
-		ThreeWhiteSoldiersIndicator threeWhiteSo = new ThreeWhiteSoldiersIndicator(series, 5, Decimal.ONE);
-		BullishTheMorningStar morningStar = new BullishTheMorningStar(series, 6, 6, 0.50, 0.25);
+		longEma = new EMAIndicator(closePrice, 11);
 
-		BearishEngulfingIndicator BearEngulf = new BearishEngulfingIndicator(series);
-		BearishHaramiIndicator BearHarami = new BearishHaramiIndicator(series);
-		BearishDarkCloudCoverIndicator BeDarkClCo = new BearishDarkCloudCoverIndicator(series);
-		ThreeBlackCrowsIndicator threeBlackCr = new ThreeBlackCrowsIndicator(series, 5, Decimal.ONE);
+		BuHarami = new BullishHaramiIndicator(series, 6, 20, 0.60, 0.30);
 
-		UpTrendIndicator uptrend = new UpTrendIndicator(series, 20);
-		DownTrendIndicator downtrend = new DownTrendIndicator(series, 20);
+		BulEngulf = new BullishEngulfingIndicator(series, 20, 20, 0.50);
 
-		VolumeIndicator volumeIndicator = new VolumeIndicator(series);
-		SMAIndicator volumeSMA = new SMAIndicator(volumeIndicator, 10);
+		BullPier = new BullishPiercingIndicator(series, 20, 20, 0.50);
 
-		AmountIndicator amountIndicator = new AmountIndicator(series);
+		BullPaper = new BullishPaperUmbrellaIndicator(series, 5, 5, 0.25);
+
+		threeWhiteSo = new ThreeWhiteSoldiersIndicator(series, 5, Decimal.ONE);
+
+		morningStar = new BullishTheMorningStar(series, 6, 6, 0.50, 0.25);
+
+		BearHarami = new BearishHaramiIndicator(series);
 		
-		
-		public Rule buyingRule(){
-			return (/*
-					 * new CrossedUpIndicatorRule(shortEma, longEma))
-					 * .or(new CrossedDownIndicatorRule(closePrice,
-					 * Decimal.valueOf("900"))) .or(new
-					 * BooleanIndicatorRule(threeWhiteSo)) .or(
-					 */new BooleanIndicatorRule(BuHarami))
-					.or(new BooleanIndicatorRule(BulEngulf))/*
-					 * .or(new BooleanIndicatorRule(BullPier)) */
-					.or(new BooleanIndicatorRule(BullPaper)).or(new BooleanIndicatorRule(morningStar));
-					// .and(new OverIndicatorRule(volumeIndicator, volumeSMA)));
-		}
-		
-		public Rule sellingRule(){
-			return (new CrossedDownIndicatorRule(shortEma, longEma)
-					.or(new StopLossRule(closePrice, Decimal.valueOf("1")))
-					// .or(new StopGainRule(closePrice, Decimal.valueOf("3")))
-					.or(new BooleanIndicatorRule(threeBlackCr))
-					.or((new BooleanIndicatorRule(BearEngulf)).and(new BooleanIndicatorRule(uptrend)))
-					.or((new BooleanIndicatorRule(BearHarami)).and(new BooleanIndicatorRule(uptrend)))
-					.or((new BooleanIndicatorRule(BeDarkClCo)).and(new BooleanIndicatorRule(uptrend))));
-					// .and(new OverIndicatorRule(volumeIndicator, volumeSMA)));
-		}
+		BearEngulf = new BearishEngulfingIndicator(series);
+
+		BeDarkClCo = new BearishDarkCloudCoverIndicator(series);
+
+		threeBlackCr = new ThreeBlackCrowsIndicator(series, 5, Decimal.ONE);
+
+		uptrend = new UpTrendIndicator(series, 20);
+
+		downtrend = new DownTrendIndicator(series, 20);
+
+		volumeIndicator = new VolumeIndicator(series);
+
+		volumeSMA = new SMAIndicator(volumeIndicator, 10);
+
+		amountIndicator = new AmountIndicator(series);
+	}
+
+	public Rule buyingRule() {
+		return (/*
+				 * new CrossedUpIndicatorRule(shortEma, longEma)) .or(new
+				 * CrossedDownIndicatorRule(closePrice, Decimal.valueOf("900")))
+				 * .or(new BooleanIndicatorRule(threeWhiteSo)) .or(
+				 */new BooleanIndicatorRule(BuHarami))
+				.or(new BooleanIndicatorRule(
+						BulEngulf))/*
+									 * .or(new BooleanIndicatorRule(BullPier))
+									 */
+				.or(new BooleanIndicatorRule(BullPaper)).or(new BooleanIndicatorRule(morningStar));
+		// .and(new OverIndicatorRule(volumeIndicator, volumeSMA)));
+	}
+
+	public Rule sellingRule() {
+		return (new CrossedDownIndicatorRule(shortEma, longEma).or(new StopLossRule(closePrice, Decimal.valueOf("1")))
+				// .or(new StopGainRule(closePrice, Decimal.valueOf("3")))
+				.or(new BooleanIndicatorRule(threeBlackCr))
+				.or((new BooleanIndicatorRule(BearEngulf)).and(new BooleanIndicatorRule(uptrend)))
+				.or((new BooleanIndicatorRule(BearHarami)).and(new BooleanIndicatorRule(uptrend)))
+				.or((new BooleanIndicatorRule(BeDarkClCo)).and(new BooleanIndicatorRule(uptrend))));
+		// .and(new OverIndicatorRule(volumeIndicator, volumeSMA)));
+	}
 }
