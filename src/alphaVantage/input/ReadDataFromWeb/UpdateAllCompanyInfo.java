@@ -52,7 +52,7 @@ public class UpdateAllCompanyInfo {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
+	} 
 	  private static  void CSVToExcelConverter () throws IOException
 	    {	String methodName = "CSVToExcelConverter~";
 	        String thisLine;
