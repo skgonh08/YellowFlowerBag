@@ -34,6 +34,7 @@ import ta4j.indicators.candles.*;
 import ta4j.indicators.simple.*;
 import ta4j.indicators.trackers.EMAIndicator;
 import ta4j.indicators.trackers.SMAIndicator;
+import ta4j.trading.byingSellingRules.BuyingSellingRuleFromIndicators;
 import ta4j.trading.rules.BooleanIndicatorRule;
 import ta4j.trading.rules.CrossedDownIndicatorRule;
 import ta4j.trading.rules.CrossedUpIndicatorRule;
@@ -51,7 +52,7 @@ public class SBITest1yr extends Application {
 	public static void main(String[] args) {
 
 		TicksXLSDatabase db = new TicksXLSDatabase(stockName, "Day");
-		// db.updateDatabase();
+		//db.updateDatabase();
 
 		try {
 			series = db.loadTicks(1, InputDataType.YEAR);
@@ -95,20 +96,24 @@ public class SBITest1yr extends Application {
 		System.out.println("Amount at index 2 is : " + amountIndicator.getValue(2));
 
 		// Buying rules
+		BuyingSellingRuleFromIndicators bsr = new BuyingSellingRuleFromIndicators(series);
+		
+		
+		Rule buyingRule = bsr.buyingRule(); //inserted by bngonh on 22.02.2018 @8:50 pm
+		
+						/*  inserted by bngonh on 22.02.2018 @8:50 pm
+						 
+						 	(new CrossedUpIndicatorRule(shortEma, longEma))
+							  //.or(new CrossedDownIndicatorRule(closePrice,Decimal.valueOf("900"))) 
+							  //.or(new BooleanIndicatorRule(threeWhiteSo)) 
+							  .or(new BooleanIndicatorRule(BuHarami))
+							  .or(new BooleanIndicatorRule(BulEngulf))
+							 .or(new BooleanIndicatorRule(BullPier))
+							.or(new BooleanIndicatorRule(BullPaper))
+							.or(new BooleanIndicatorRule(morningStar));
+							// .and(new OverIndicatorRule(volumeIndicator, volumeSMA)));
 
-		Rule buyingRule = (/*
-							 * new CrossedUpIndicatorRule(shortEma, longEma))
-							 * .or(new CrossedDownIndicatorRule(closePrice,
-							 * Decimal.valueOf("900"))) .or(new
-							 * BooleanIndicatorRule(threeWhiteSo)) .or(
-							 */new BooleanIndicatorRule(BuHarami))
-				.or(new BooleanIndicatorRule(
-						BulEngulf))/*
-									 * .or(new BooleanIndicatorRule(BullPier))
-									 */
-				.or(new BooleanIndicatorRule(BullPaper)).or(new BooleanIndicatorRule(morningStar));
-		// .and(new OverIndicatorRule(volumeIndicator, volumeSMA)));
-
+		 				inserted by bngonh on 22.02.2018 @8:50 pm*/ 
 		// Selling rules
 
 		Rule sellingRule = new CrossedDownIndicatorRule(shortEma, longEma)
@@ -164,7 +169,7 @@ public class SBITest1yr extends Application {
 		// graph.createGraph(args);
 
 		// launching graph
-		launch(args);
+		//launch(args);
 	}
 
 	protected double getNewValue(double previousValue) {
