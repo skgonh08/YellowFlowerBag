@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import alphaVantage.InputDataType;
-import alphaVantage.excelWrite.XLSDatabase;
+import alphaVantage.excelWrite.TicksXLSDatabase;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
@@ -50,7 +50,7 @@ public class SBITest1yr extends Application {
 
 	public static void main(String[] args) {
 
-		XLSDatabase db = new XLSDatabase(stockName, "Day");
+		TicksXLSDatabase db = new TicksXLSDatabase(stockName, "Day");
 		// db.updateDatabase();
 
 		try {
