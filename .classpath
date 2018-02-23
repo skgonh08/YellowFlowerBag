@@ -39,7 +39,5 @@
 	<classpathentry kind="lib" path="C:/Users/Sumanta/Desktop/poi-bin-3.17-20170915/poi-3.17/poi-ooxml-3.17.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Sumanta/Desktop/poi-bin-3.17-20170915/poi-3.17/poi-ooxml-schemas-3.17.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Sumanta/Desktop/poi-bin-3.17-20170915/poi-3.17/poi-scratchpad-3.17.jar"/>
-	<classpathentry kind="lib" path="E:/03 Stock Market Analysis/Automation Using Java/Java Libraries/jsoup-1.11.2.jar"/>
-	<classpathentry kind="lib" path="E:/03 Stock Market Analysis/Automation Using Java/Java Libraries/commons-io-2.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
